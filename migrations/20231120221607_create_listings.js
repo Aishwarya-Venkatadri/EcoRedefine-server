@@ -16,6 +16,7 @@ exports.up = function (knex) {
       table.timestamp("created_at").defaultTo(knex.fn.now());
       table.string("listing_weight").notNullable();
       table.string("listing_material").notNullable();
+      table.decimal('listing_borrow_price', 5, 2).notNullable();
   
       // Foreign key constraints
       table.foreign("category_id").references("category_id").inTable("categories");
