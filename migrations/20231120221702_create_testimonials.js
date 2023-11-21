@@ -9,6 +9,7 @@ const up = function (knex) {
       table.string("testimony").notNullable();
       table.integer("stars").notNullable();
       table.integer("listing_id").unsigned().notNullable(); //FK referencing listings 
+      table.timestamp("created_at").notNullable();
   
       // Foreign key constraints
       table.foreign("user_id").references("user_id").inTable("users");

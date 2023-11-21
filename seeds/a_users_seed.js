@@ -2,7 +2,7 @@
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }
  */
-exports.seed = async function(knex) {
+const seed = async function(knex) {
   // Deletes ALL existing entries
   await knex('users').del();
 
@@ -80,3 +80,5 @@ exports.seed = async function(knex) {
     },
   ]);
 };
+
+module.exports ={ seed };
