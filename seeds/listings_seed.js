@@ -16,6 +16,7 @@ exports.seed = async function(knex) {
       user_id: 1,
       email: "aishwarya@gmail.com",
       address: 'Royal Oak Burnaby',
+      created_at: knex.fn.now(),
       listing_weight: "494 grams",
       listing_material: "Paper",
       listing_borrow_price: '10.50'
