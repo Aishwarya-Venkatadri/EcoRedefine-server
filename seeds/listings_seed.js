@@ -17,9 +17,24 @@ exports.seed = async function(knex) {
       email: "aishwarya@gmail.com",
       address: 'Royal Oak Burnaby',
       created_at: knex.fn.now(),
-      listing_weight: "494 grams",
+      listing_weight: "494 Grams",
       listing_material: "Paper",
       listing_borrow_price: '10.50'
+    },
+    {
+      listing_id: 2,
+      listing_name: "DEKOPRO Drill Set",
+      category_id: 2,
+      image: 'listing_02.jpg',
+      location: 'Vancouver',
+      availability: 'Unavailable',
+      user_id: 2,
+      email: "eco_user@gmail.com",
+      address: '456 E Vancouver',
+      created_at: knex.fn.now(),
+      listing_weight: "748.42 Grams",
+      listing_material: "Metal",
+      listing_borrow_price: '55.50'
     }
   ]);
 };
