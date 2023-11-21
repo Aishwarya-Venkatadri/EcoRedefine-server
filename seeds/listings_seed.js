@@ -200,7 +200,7 @@ exports.seed = async function (knex) {
     {
       listing_id: 14,
       listing_name: "Single-Use Plastic Party Supplies",
-      category_id: 4, // Party Supplies
+      category_id: 4, //Party Supplies
       image: "plastic_party_supplies.jpg",
       location: "Vancouver",
       availability: "Available",
