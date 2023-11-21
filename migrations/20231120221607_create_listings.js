@@ -9,7 +9,7 @@ const up = function (knex) {
       table.integer("category_id").unsigned().notNullable(); // FK referencing categories
       table.string("image").notNullable();
       table.string("location").notNullable();
-      table.boolean("availability").notNullable();
+      table.string("availability").notNullable();
       table.integer("user_id").unsigned().notNullable(); // FK referencing users 
       table.string("email").notNullable();
       table.string("address").notNullable();
