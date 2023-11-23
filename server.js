@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const categoryRoutes = require('./routes/categories-routes');
 const listingRoutes = require('./routes/listings-routes.js');
+const testimonialsRoutes = require('./routes/testimonials-routes.js')
 const dotenv = require('dotenv');
 
 const app = express();
@@ -17,6 +18,7 @@ app.use(express.static('public')); // static files -- images served public
 // Routes
 app.use("/categories", categoryRoutes);
 app.use("/listings", listingRoutes);
+app.use('/testimonials', testimonialsRoutes);
 
 // Default route
 app.get('/', (req, res) => {
