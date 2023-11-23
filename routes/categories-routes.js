@@ -7,5 +7,8 @@ router
 .route("/")
 .get(categoryController.index);
 
+router.route("/:id")
+.get(categoryController.listings);
+
 
 module.exports = router;
