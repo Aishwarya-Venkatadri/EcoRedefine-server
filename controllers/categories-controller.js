@@ -1,5 +1,5 @@
-import knex from "knex";
-import knexFile from "../knexfile.js";
+const knex = require('knex');
+const knexFile = require('../knexfile.js');
 
 const db = knex(knexFile);
 
@@ -11,3 +11,8 @@ const index = async(_req, res)=>{
         res.status(400).send(`Error retrieving categories: ${err}`);
     }
 };
+
+
+module.exports = {
+    index
+  };
