@@ -5,12 +5,11 @@ const db = knex(knexFile);
 
 // Validation function for add
 const isValidAdd = (data) => {
-  // Ensure that all required fields are present and have valid values
+
   return (
     data &&
     typeof data.listing_name === 'string' &&
     typeof data.category_id === 'number' &&
-    typeof data.image === 'string' &&
     typeof data.location === 'string' &&
     typeof data.availability === 'string' &&
     typeof data.user_id === 'number' &&
@@ -19,15 +18,11 @@ const isValidAdd = (data) => {
     typeof data.listing_weight === 'string' &&
     typeof data.listing_material === 'string' &&
     typeof data.listing_borrow_price === 'number'
-    
   );
 };
 
 // Validation function for listing ID
 const isValidId = (id) => {
-
-  //  ID is a valid format in  database
-
   // Check if id is a non-empty string or a positive integer
   const isValid =
     typeof id === 'string' &&
@@ -69,17 +64,26 @@ const getListingById = async (req, res) => {
   }
 };
 
-// Add a new listing
 const addNewListing = async (req, res) => {
+  const defaultImage = 'default_image.jpg';
   const newListing = req.body;
+  if (!newListing.image) {
+    newListing.image = defaultImage;
+  }
 
+ 
   if (!isValidAdd(newListing)) {
     return res.status(400).json({ error: 'Invalid data for adding a new listing' });
   }
 
   try {
+    // Insert the new listing into the database
     const [listingId] = await db('listings').insert(newListing);
+
+    // Fetch the added listing
     const addedListing = await db('listings').where({ listing_id: listingId }).first();
+
+    // Respond with the added listing
     res.json(addedListing);
   } catch (error) {
     console.error(error);
@@ -87,7 +91,7 @@ const addNewListing = async (req, res) => {
   }
 };
 
-// Update an existing listing
+
 const updateListing = async (req, res) => {
   const { id } = req.params;
   const updatedListing = req.body;
