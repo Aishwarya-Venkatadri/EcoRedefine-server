@@ -23,7 +23,7 @@ const isValidAdd = (data) => {
 
 // Validation function for listing ID
 const isValidId = (id) => {
-  // Check if id is a non-empty string or a positive integer
+  // if id is a non-empty string or a positive integer
   const isValid =
     typeof id === 'string' &&
     id.trim() !== '' &&
