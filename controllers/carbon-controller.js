@@ -1,26 +1,23 @@
-
-
 const MATERIAL_EMISSIONS = {
-    plastic: 6.0,       // Estimated emission factor for plastic (kg CO2 per kg of plastic)
-    metal: 5.0,         // Estimated emission factor for metal (kg CO2 per kg of metal)
-    paper: 2.0,         // Estimated emission factor for paper (kg CO2 per kg of paper)
-    aluminum: 20.0,      // Estimated emission factor for aluminum (kg CO2 per kg of aluminum)
-    denim: 27.0,        // Estimated emission factor for denim (kg CO2 per kg of denim)
-    nylon: 9.0,         // Estimated emission factor for nylon (kg CO2 per kg of nylon)
-    charcoal: 8.0,     // Estimated emission factor for charcoal (kg CO2 per kg of charcoal)
-  
+    plastic: 6.0,
+    metal: 5.0,
+    paper: 2.0,
+    aluminum: 20.0,
+    denim: 27.0,
+    nylon: 9.0,
+    charcoal: 8.0,
   };
   
   const calculateCarbonFootprint = (weight, material) => {
     const lowercaseMaterial = material.toLowerCase();
   
     if (!MATERIAL_EMISSIONS.hasOwnProperty(lowercaseMaterial)) {
-      return null; // Material not supported
+      return null;
     }
   
     let weightInGrams = parseFloat(weight);
     if (isNaN(weightInGrams)) {
-      return null; // Invalid weight
+      return null;
     }
   
     const emissionFactor = MATERIAL_EMISSIONS[lowercaseMaterial];
@@ -37,13 +34,18 @@ const MATERIAL_EMISSIONS = {
         return res.status(400).json({ error: 'Listing weight and material are required.' });
       }
   
-      const carbonFootprint = calculateCarbonFootprint(listing_weight, listing_material);
+      const materials = listing_material.split(',').map((material) => material.trim());
+      let totalCarbonFootprint = 0;
   
-      if (carbonFootprint === null) {
-        return res.status(400).json({ error: 'Material not supported for carbon footprint calculation.' });
+      for (const material of materials) {
+        const carbonFootprint = calculateCarbonFootprint(listing_weight, material);
+        if (carbonFootprint === null) {
+          return res.status(400).json({ error: `Material "${material}" not supported for carbon footprint calculation.` });
+        }
+        totalCarbonFootprint += carbonFootprint;
       }
   
-      res.json({ carbonFootprint });
+      res.json({ carbonFootprint: totalCarbonFootprint });
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: 'Internal Server Error' });
