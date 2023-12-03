@@ -5,7 +5,6 @@ const db = knex(knexFile);
 
 // Validation function for add
 const isValidAdd = (data) => {
-
   return (
     data &&
     typeof data.listing_name === 'string' &&
@@ -17,13 +16,13 @@ const isValidAdd = (data) => {
     typeof data.address === 'string' &&
     typeof data.listing_weight === 'string' &&
     typeof data.listing_material === 'string' &&
-    typeof data.listing_borrow_price === 'number'
+    (typeof data.listing_borrow_price === 'string' || typeof data.listing_borrow_price === 'number')
+
   );
 };
 
 // Validation function for listing ID
 const isValidId = (id) => {
-  // if id is a non-empty string or a positive integer
   const isValid =
     typeof id === 'string' &&
     id.trim() !== '' &&
@@ -67,11 +66,21 @@ const getListingById = async (req, res) => {
 const addNewListing = async (req, res) => {
   const defaultImage = 'default_image.jpg';
   const newListing = req.body;
+
+  // Extract the numeric part from the category_id string using regular expression
+  const numericCategoryId = newListing.category_id.match(/\d+/);
+
+  if (numericCategoryId) {
+    // Convert the numeric part to an integer
+    newListing.category_id = parseInt(numericCategoryId[0]);
+  } else {
+    return res.status(400).json({ error: 'Invalid category_id' });
+  }
+
   if (!newListing.image) {
     newListing.image = defaultImage;
   }
 
- 
   if (!isValidAdd(newListing)) {
     return res.status(400).json({ error: 'Invalid data for adding a new listing' });
   }
@@ -91,7 +100,6 @@ const addNewListing = async (req, res) => {
   }
 };
 
-
 const updateListing = async (req, res) => {
   const { id } = req.params;
   const updatedListing = req.body;
@@ -101,7 +109,23 @@ const updateListing = async (req, res) => {
   }
 
   try {
-    await db('listings').where({ listing_id: id }).update(updatedListing);
+    const existingListing = await db('listings').where({ listing_id: id }).first();
+
+    // Create an object to store updated fields
+    const updatedFields = {};
+
+  
+    for (const key in updatedListing) {
+      // Check if the value has changed and the key is not 'created_at'
+      if (existingListing[key] !== updatedListing[key] && key !== 'created_at') {
+        updatedFields[key] = updatedListing[key];
+      }
+    }
+
+    // Update only the fields that have changed
+    await db('listings').where({ listing_id: id }).update(updatedFields);
+
+    // Fetch and return the updated listing
     const updatedListingResult = await db('listings').where({ listing_id: id }).first();
     res.json(updatedListingResult);
   } catch (error) {
@@ -109,6 +133,7 @@ const updateListing = async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 };
+
 
 // Delete a listing
 const deleteListing = async (req, res) => {
